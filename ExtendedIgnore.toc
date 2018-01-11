@@ -1,0 +1,15 @@
+## Interface: 70300
+## Title: ExtendedIgnore
+## Description: An extended and improved ignore list.
+## Notes: An extended and improved ignore list.
+## Notes-deDE: Eine erweiterte und verbeserte Ignorierenliste.
+## Author: Ignifazius
+## DefaultState: disabled
+## SavedVariables: IgnoreTable
+
+ExtendedIgnore.lua
+localization.core.lua
+localization.de.lua
+localization.en.lua
+
+
