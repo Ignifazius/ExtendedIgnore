@@ -1,19 +1,19 @@
-local frame = CreateFrame ("Button", "ExtendedIgnoreFrame", UIParent) -- create a Frame (doesnt Matter which one) to start a function
+local frame = CreateFrame ("Button", "BanhammerFrame", UIParent) -- create a Frame (doesnt Matter which one) to start a function
 frame:RegisterEvent("ADDON_LOADED")
 frame:RegisterEvent("PLAYER_LOGIN")
 frame:RegisterEvent("PLAYER_LOGOUT")
 frame:RegisterEvent("GROUP_ROSTER_UPDATE")
 frame:SetScript("OnEvent", function (self,event,arg1,...)
     --print(event, arg1)
-	if (event == "ADDON_LOADED" and arg1 =="Blizzard_InspectUI") then -- TODO replace arg1 with something better
+    if (event == "ADDON_LOADED" and arg1 =="Blizzard_InspectUI") then -- TODO replace arg1 with something better
         load_ignore_table()
         hooksecurefunc("ToggleDropDownMenu", BanButtonSetup);
-	end
-	if event == "PLAYER_LOGIN" then
-		load_ignore_table()
-	end
-	if event == "PLAYER_LOGOUT" then
-		save_ignore_table()
+    end
+    if event == "PLAYER_LOGIN" then
+        load_ignore_table()
+    end
+    if event == "PLAYER_LOGOUT" then
+        save_ignore_table()
     end
     if event == "GROUP_ROSTER_UPDATE" then
         scanGroupForBanned()
@@ -42,10 +42,10 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER_INFORM", myChatFilter)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_WHISPER", myChatFilter)
 
 
-SLASH_EXTENTEDIGNORE1 = "/ban"
-SlashCmdList["EXTENTEDIGNORE"] = function(msg)
+SLASH_BANHAMMER1 = "/ban"
+SlashCmdList["BANHAMMER"] = function(msg)
     ban(msg)
-end 
+end
 
 
 function ban(msg)
@@ -84,13 +84,13 @@ function findPlayer(player)
 end
 
 function scanGroupForBanned()
-    print("Scanning group...")
+    --print("Scanning group...")
     local count = GetNumGroupMembers();
     for raidIndex=1, count do
         --name, rank, subgroup, level, class, fileName, zone, online, isDead, role, isML = GetRaidRosterInfo(raidIndex);
         local name, _, _, _, _, fileName  = GetRaidRosterInfo(raidIndex);
         local color = RAID_CLASS_COLORS[fileName]
-        print("Scanning ", name, "(", count, "/", raidIndex, ")", color);
+        --print("Scanning ", name, "(", raidIndex, "/", count, ")", "|c"..color.colorStr..name );
         if isPlayerInIgnoreTable(name) then --http://wowprogramming.com/docs/api/UnitClass -> class color
             print(name, local_ignore_table[name])
             myPrint("Player "..name.." is on your banlist for: "..local_ignore_table[name])
@@ -110,19 +110,19 @@ function addToIgnoreTable(player, reason)
         msg = "Player "..player.." banned"
         if reason ~= "" then
             msg = msg.." ("..reason..")."
-        end        
+        end
     else
         msg = "Player "..player.." is already on your ignore list"
         if reason ~= "" then
-            msg = msg.." ("..local_ignore_table[player]..")" 
-        end       
+            msg = msg.." ("..local_ignore_table[player]..")"
+        end
     end
     print(msg)
 end
 
 function isPlayerInIgnoreTable(playername)
     for k,v in pairs(local_ignore_table) do
-        if k == playername then          
+        if k == playername then
             return true
         end
     end
@@ -153,11 +153,11 @@ function save_ignore_table()
 end
 
 function decline_invite_list()
-    
+
 end
 
 function trim(s)
-  return (s:gsub("^%s*(.-)%s*$", "%1"))
+    return (s:gsub("^%s*(.-)%s*$", "%1"))
 end
 
 
@@ -173,7 +173,7 @@ function BanButtonSetup(level, value, dropDownFrame, anchorName, xOffset, yOffse
             local button = _G[buttonPrefix..i];
             if not button then break end;
             if button:GetText() == UnitPopupButtons["BAN"].text then
-                print("banbtn")
+                --print("banbtn")
                 button.func = function() banPlayerPopup(_G[buttonPrefix.."1"]:GetText()) end
                 break;
             end
@@ -183,17 +183,17 @@ function BanButtonSetup(level, value, dropDownFrame, anchorName, xOffset, yOffse
 end
 
 local b = CreateFrame("Button", "MyButton", UIParent, "UIPanelButtonTemplate")
-	b:SetSize(80 ,22) -- width, height
-	b:SetText("ExtendedIgnore")
-	b:SetPoint("CENTER")
-	b:SetScript("OnClick", function()
-		printIgnoreTable()
-	end)
-    b:SetMovable(true)
-    b:EnableMouse(true)
-    b:RegisterForDrag("LeftButton")
-    b:SetScript("OnDragStart", frame.StartMoving)
-    b:SetScript("OnDragStop", frame.StopMovingOrSizing)
-    
-    
-    
+b:SetSize(80 ,22) -- width, height
+b:SetText("Banhammer")
+b:SetPoint("CENTER")
+b:SetScript("OnClick", function()
+    printIgnoreTable()
+end)
+b:SetMovable(true)
+b:EnableMouse(true)
+b:RegisterForDrag("LeftButton")
+b:SetScript("OnDragStart", frame.StartMoving)
+b:SetScript("OnDragStop", frame.StopMovingOrSizing)
+
+
+
